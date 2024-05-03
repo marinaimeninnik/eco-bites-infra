@@ -59,7 +59,7 @@ module "rds" {
   allocated_storage         = var.allocated_storage
   storage_type              = var.storage_type
   port                      = var.port
-  db_name                   = "${var.prefix}-${var.db_name}"
+  db_name                   = "${var.prefix}${var.db_name}"
   db_subnet_group_name      = module.db_subnet_group.aws_db_subnet_group_name
   username                  = var.db_username
   password                  = var.db_password
