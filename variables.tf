@@ -4,6 +4,11 @@ variable "name" {
   default     = ""
 }
 
+variable "prefix" {
+  description = "Prefix for creating resources for different environments"
+  type        = string
+}
+
 variable "tags" {
   description = "Additional tags for all resources as identifier"
   type        = map(string)

@@ -9,7 +9,7 @@ terraform {
 
 module "vpc" {
   source               = "./modules/vpc"
-  name                 = var.name
+  name                 = "${var.prefix}-${var.name}"
   cidr                 = var.cidr
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
@@ -18,7 +18,7 @@ module "vpc" {
 
 module "security_group_webserver" {
   source       = "./modules/sg"
-  name         = var.security_group_name
+  name         = "${var.prefix}-${var.security_group_name}"
   vpc_id       = module.vpc.vpc_id
   ingress_port = [80, 22, 3000]
   tags         = var.tags
@@ -34,17 +34,17 @@ module "aws_security_group_rds" {
 }
 module "ec2_instance_webserver" {
   source                 = "./modules/ec2"
-  name                   = var.name
+  name                   = "${var.prefix}-${var.name}"
   ami                    = var.ami
   instance_type          = var.instance_type
-  instance_name          = var.instance_name
+  instance_name          = "${var.prefix}-${var.instance_name}"
   vpc_security_group_ids = module.security_group_webserver.security_group_ids
   subnet_id              = element(module.vpc.public_subnet_ids, 0)
   tags                   = var.tags
 }
 module "db_subnet_group" {
   source     = "./modules/db_subnet_group"
-  name       = var.db_subnet_group_name
+  name       = "${var.prefix}-${var.db_subnet_group_name}"
   vpc_id     = module.vpc.vpc_id
   subnet_ids = [element(module.vpc.private_subnet_ids, 0), element(module.vpc.private_subnet_ids, 1)]
   tags       = var.tags
@@ -59,7 +59,7 @@ module "rds" {
   allocated_storage         = var.allocated_storage
   storage_type              = var.storage_type
   port                      = var.port
-  db_name                   = var.db_name
+  db_name                   = "${var.prefix}-${var.db_name}"
   db_subnet_group_name      = module.db_subnet_group.aws_db_subnet_group_name
   username                  = var.db_username
   password                  = var.db_password
@@ -68,17 +68,18 @@ module "rds" {
   final_snapshot_identifier = var.final_snapshot_identifier
   tags                      = var.tags
 }
+
 module "bucket_artifact" {
   source         = "./modules/s3"
-  name           = var.name
+  name           = "${var.prefix}-${var.name}"
   bucket_private = var.bucket_private
-  bucket         = var.bucket_artifact_name
+  bucket         = "${var.prefix}-${var.bucket_artifact_name}"
   tags           = var.tags
 }
 module "bucket_frontend" {
   source        = "./modules/s3"
-  name          = var.name
+  name          = "${var.prefix}-${var.name}"
   bucket_public = var.bucket_public
-  bucket        = var.bucket_frontend_name
+  bucket        = "${var.prefix}-${var.bucket_frontend_name}"
   tags          = var.tags
 }
