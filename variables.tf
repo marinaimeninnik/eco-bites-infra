@@ -205,3 +205,14 @@ variable "security_rds_group_name" {
   type        = string
 }
 
+# variable "bucket_domain_name" {
+#   description = "The DNS domain name of the S3 bucket or custom origin."
+#   type        = string
+# }
+
+# variable "origin_id" {
+#   description = "A unique identifier for the origin."
+#   type        = string
+# }
+
+
