@@ -1,0 +1,29 @@
+name: image-create
+
+on:
+    workflow_call:
+
+jobs:
+    image_creation:
+        # permissions:
+        #     id-token: write
+        #     contents: read
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+      
+            - name: Setup HashiCorp Packer
+              uses: hashicorp/setup-packer@v3.1.0        
+      
+            - name: Build AMI with Packer
+              run: |
+                packer build docker-ami.json
+                echo "AMI_ID=$(packer output -machine-readable ami_id | cut -d, -f6)" >> $GITHUB_ENV
+      
+            - name: Upload AMI ID as Artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: ami-id
+                path: ${{ env.AMI_ID }}
+      

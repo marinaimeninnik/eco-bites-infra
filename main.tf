@@ -7,6 +7,15 @@ terraform {
   }
 }
 
+resource "aws_ecr_repository" "ecr_repo" {
+  name                 = "${var.prefix}-${var.name}"
+  image_tag_mutability = "MUTABLE"
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  tags = var.tags
+}
+
 module "vpc" {
   source               = "./modules/vpc"
   name                 = "${var.prefix}-${var.name}"
@@ -32,6 +41,7 @@ module "aws_security_group_rds" {
   egress_port  = [0]
   tags         = var.tags
 }
+
 module "ec2_instance_webserver" {
   source                 = "./modules/ec2"
   name                   = "${var.prefix}-${var.name}"
@@ -42,6 +52,7 @@ module "ec2_instance_webserver" {
   subnet_id              = element(module.vpc.public_subnet_ids, 0)
   tags                   = var.tags
 }
+
 module "db_subnet_group" {
   source     = "./modules/db_subnet_group"
   name       = "${var.prefix}-${var.db_subnet_group_name}"

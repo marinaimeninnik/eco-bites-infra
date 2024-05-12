@@ -9,6 +9,11 @@ on:
       - '**'
   workflow_dispatch:
     inputs:
+      create_image:
+        description: "Create AMI image with Packer"
+        required: false
+        type: boolean
+        default: false
       action:
         description: "Create or destroy infrastructure"
         required: true
@@ -29,6 +34,11 @@ permissions:
   contents: read
 
 jobs:
+
+  create-image:
+    if: github.event.inputs.create_image == 'true'
+    uses: ./.github/workflows/create-image.yaml
+
   install-infra:
     if: github.event.inputs.action == 'create' || github.event_name == 'push' || github.event_name == 'pull_request'
     uses: ./.github/workflows/infra-create.yaml
