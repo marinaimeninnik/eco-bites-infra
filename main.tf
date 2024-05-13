@@ -87,10 +87,17 @@ module "bucket_frontend" {
   tags          = var.tags
 }
 
-module "cloudfront_frontend" {
+module "cloudfront" {
   source              = "./modules/cdn"
   origin_domain_name  = module.bucket_frontend.bucket_domain_name
   origin_id           = "S3-${module.bucket_frontend.bucket}"
   default_root_object = "index.html"
   tags                = var.tags
+}
+
+module "api_gateway" {
+  source      = "./modules/api_gw"
+  name        = "${var.prefix}-api"
+  description = "API Gateway for connecting frontend and backend"
+  backend_url = "http://${module.ec2_instance_webserver.instance_public_ip}:3000/{proxy}"
 }
