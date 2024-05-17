@@ -1,7 +1,11 @@
 name: infra-create
 
 on:
-  workflow_call:        
+  workflow_call:
+    inputs:
+      image_tag:
+        required: false
+        type: string        
 
 jobs:
   install-infra:
