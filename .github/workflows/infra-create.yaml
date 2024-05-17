@@ -27,6 +27,9 @@ jobs:
     steps:
         - name: Check out GIT repository
           uses: actions/checkout@v4
+          with:
+            repository: marinaimeninnik/eco-bites-infra
+            # path: my-tools
 
         # - name: Copy .tfvars file
         #   if: ${{ github.event.inputs.local_trigger == 'false' }}

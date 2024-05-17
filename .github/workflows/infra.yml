@@ -23,9 +23,6 @@ on:
         options:
           - dev
           # - prod    
-      image_tag:
-        required: false
-        type: string
 
 permissions:
   id-token: write
