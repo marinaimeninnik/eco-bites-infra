@@ -2,10 +2,15 @@ name: infra-create
 
 on:
   workflow_call:
+  workflow_dispatch:
     inputs:
       image_tag:
         required: false
-        type: string        
+        type: string
+      # local_trigger:
+      #   required: false
+      #   type: boolean
+      #   default: true
 
 jobs:
   install-infra:
@@ -21,6 +26,12 @@ jobs:
     steps:
         - name: Check out GIT repository
           uses: actions/checkout@v4
+
+        # - name: Copy .tfvars file
+        #   if: ${{ github.event.inputs.local_trigger == 'false' }}
+        #   run: |
+        #     mkdir -p ${{ github.workspace }}/config
+        #     cp config/${{ github.event.inputs.environment}}.tfvars ${{ github.workspace }}/config/
     
         - name: Install Terraform
           uses: hashicorp/setup-terraform@v3                
