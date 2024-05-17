@@ -2,11 +2,7 @@ name: infra-create
 
 on:
   workflow_call:
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        required: false
-        type: string
+  
       # local_trigger:
       #   required: false
       #   type: boolean
