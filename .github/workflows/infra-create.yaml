@@ -2,7 +2,7 @@ name: infra-create
 
 on:
   workflow_call:
-  workflow_dispatch:
+  # workflow_dispatch:
     inputs:
       image_tag:
         required: false
