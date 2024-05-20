@@ -25,7 +25,7 @@ jobs:
         - name: Check out GIT repository
           uses: actions/checkout@v4
           with:
-            repository: marinaimeninnik/eco-bites-infra
+            repository: marinaimeninnik/eco-bites-infra@back-deployment
            
         - name: Install Terraform
           uses: hashicorp/setup-terraform@v3                
