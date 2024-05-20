@@ -28,6 +28,8 @@ security_group_name = "Webserver"
 ami           = "ami-053b0d53c279acc90"
 instance_type = "t2.micro"
 instance_name = "webserver"
+ecr_registry  = "eco-bites"
+image_tag     = "IMAGE_TAG"
 
 #--- VPC DB subnet group properties  --------------------------------
 db_subnet_group_name = "db-subnet-group"

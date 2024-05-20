@@ -1,5 +1,5 @@
 locals {
-    user_data = <<-EOF
+  user_data = <<-EOF
             #!/bin/bash
             sudo apt-get -y update
             sudo apt-get -y install wget
@@ -9,6 +9,7 @@ locals {
             sudo service docker restart
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
+            echo "export IMAGE_TAG=IMAGE_TAG" >> /etc/environment
             EOF
 
 }
@@ -25,7 +26,7 @@ resource "aws_key_pair" "key_pair" {
   public_key = join("", tls_private_key.key_pair.*.public_key_openssh)
 
   tags = merge(
-    { Name = "${var.name}.ssh-key"},
+    { Name = "${var.name}.ssh-key" },
     var.tags
   )
 }
@@ -38,25 +39,37 @@ resource "local_file" "ssh_private_key" {
   content         = join("", tls_private_key.key_pair.*.private_key_pem)
 }
 
+resource "local_file" "docker_compose" {
+  filename        = "${path.module}/docker-compose.yaml"
+  file_permission = "0644"
+  content = templatefile("${path.module}/templates/docker-compose.yaml", {
+    db_username  = var.db_username,
+    db_password  = var.db_password,
+    db_name      = var.db_name,
+    ecr_registry = var.ecr_registry
+    image_tag    = var.image_tag
+  })
+}
+
 
 resource "aws_instance" "this" {
-  ami              = var.ami
-  instance_type    = var.instance_type
-  key_name         = var.ec2_key_name == "" ? join("", aws_key_pair.key_pair[*].key_name) : var.ec2_key_name
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.ec2_key_name == "" ? join("", aws_key_pair.key_pair[*].key_name) : var.ec2_key_name
   user_data_replace_on_change = true
-  subnet_id        = var.subnet_id
-  vpc_security_group_ids = var.vpc_security_group_ids
-  user_data        = local.user_data
+  subnet_id                   = var.subnet_id
+  vpc_security_group_ids      = var.vpc_security_group_ids
+  user_data                   = local.user_data
 
   provisioner "file" {
-    source      = "${path.module}/templates/docker-compose.yml"
-    destination = "/home/ubuntu/docker-compose.yml" 
+    source      = "${path.module}/templates/docker-compose.yaml"
+    destination = "/home/ubuntu/docker-compose.yaml"
 
     connection {
       type        = "ssh"
-      user        = "ubuntu"  # user for connection
+      user        = "ubuntu" # user for connection
       private_key = join("", tls_private_key.key_pair.*.private_key_pem)
-      host        = self.public_ip 
+      host        = self.public_ip
     }
   }
 

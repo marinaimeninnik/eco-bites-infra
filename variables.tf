@@ -110,6 +110,17 @@ variable "subnet_id" {
   default     = null
 }
 
+variable "ecr_registry" {
+  description = "The ECR name to download docker image"
+  type        = string
+  default     = null
+}
+
+variable "image_tag" {
+  description = "Image tag, generated with semantic release dynamically"
+  type        = string
+}
+
 #------ DB subnet group properties -------------------------------
 variable "db_subnet_group_name" {
   description = "The VPC DB Subnet ID group name to launch in"

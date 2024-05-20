@@ -42,6 +42,10 @@ module "ec2_instance_webserver" {
   vpc_security_group_ids = module.security_group_webserver.security_group_ids
   subnet_id              = element(module.vpc.public_subnet_ids, 0)
   tags                   = var.tags
+  ecr_registry           = var.ecr_registry
+  db_username            = var.db_username
+  db_password            = var.db_password
+  db_name                = var.db_name
 }
 
 module "db_subnet_group" {
