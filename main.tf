@@ -46,6 +46,7 @@ module "ec2_instance_webserver" {
   db_username            = var.db_username
   db_password            = var.db_password
   db_name                = var.db_name
+  image_tag              = var.image_tag
 }
 
 module "db_subnet_group" {
