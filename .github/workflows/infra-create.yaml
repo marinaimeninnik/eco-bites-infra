@@ -27,6 +27,10 @@ jobs:
           with:
             repository: marinaimeninnik/eco-bites-infra
             ref: back-deployment
+
+        - name: Print image_tag
+          run: |
+           echo "Image tag: ${{ github.event.inputs.image_tag }}"
            
         - name: Install Terraform
           uses: hashicorp/setup-terraform@v3                
