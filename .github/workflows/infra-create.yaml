@@ -49,9 +49,9 @@ jobs:
 
         - name: 'Terraform Plan'
           if: github.event_name == 'workflow_dispatch'
-          run: terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
+          run: terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ github.event.inputs.image_tag }}"
         
         - name: 'Terraform Apply'
           if: github.event_name == 'workflow_dispatch'
-          run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -auto-approve
+          run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ github.event.inputs.image_tag }}" -auto-approve
     
