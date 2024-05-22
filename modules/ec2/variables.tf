@@ -52,7 +52,7 @@ variable "ecr_registry" {
 variable "image_tag" {
   description = "Image tag, generated with semantic release dynamically"
   type        = string
-  default     = "latest"
+  # default     = "latest"
 }
 
 variable "db_username" {
