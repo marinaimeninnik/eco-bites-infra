@@ -10,7 +10,6 @@ locals {
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
             echo "export IMAGE_TAG=IMAGE_TAG" >> /etc/environment
-            echo "Docker-compose file path: ${path.module}/templates/docker-compose.yaml" >> /etc/environment
 
             EOF
 
@@ -64,7 +63,7 @@ resource "aws_instance" "this" {
   user_data                   = local.user_data
 
   provisioner "file" {
-    source      = "${path.module}/templates/docker-compose.yaml"
+    source      = "${path.module}/docker-compose.yaml"
     destination = "/home/ubuntu/docker-compose.yaml"
 
     connection {
