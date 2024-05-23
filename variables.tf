@@ -110,8 +110,14 @@ variable "subnet_id" {
   default     = null
 }
 
-variable "ecr_registry" {
+variable "ecr_registry_name" {
   description = "The ECR name to download docker image"
+  type        = string
+  default     = null
+}
+
+variable "ecr_registry_alias" {
+  description = "The ECR alias to download docker image from"
   type        = string
   default     = null
 }

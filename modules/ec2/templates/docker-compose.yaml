@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   ecobites-db:
-    image: "${ecr_registry}/ecobites-db-image:${image_tag}"
+    image: "public.ecr.aws/${ecr_registry_alias}/${ecr_registry_name}:app-${image_tag}"
     environment:
       POSTGRES_USER: ${db_username}
       POSTGRES_PASSWORD: ${db_password}
@@ -15,7 +15,7 @@ services:
       - db_data:/var/lib/postgresql/data
 
   ecobites-backend:
-    image: "${ecr_registry}/ecobites-backend-image:${image_tag}"
+    image: "public.ecr.aws/${ecr_registry_alias}/${ecr_registry_name}:db-${image_tag}"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ecobites-db:5432/${db_name}
       SPRING_DATASOURCE_USERNAME: ${db_username}

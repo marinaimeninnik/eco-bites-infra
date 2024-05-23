@@ -25,11 +25,12 @@ bucket_artifact_name = "artifact-ecobytes"
 security_group_name = "Webserver"
 
 #----- EC2 instance properties  --------------------------------
-ami           = "ami-053b0d53c279acc90"
-instance_type = "t2.micro"
-instance_name = "webserver"
-ecr_registry  = "eco-bites"
-image_tag     = "IMAGE_TAG"
+ami                = "ami-053b0d53c279acc90"
+instance_type      = "t2.micro"
+instance_name      = "webserver"
+ecr_registry_name  = "eco-bites"
+ecr_registry_alias = "b3t0i4k1"
+image_tag          = "IMAGE_TAG"
 
 #--- VPC DB subnet group properties  --------------------------------
 db_subnet_group_name = "db-subnet-group"

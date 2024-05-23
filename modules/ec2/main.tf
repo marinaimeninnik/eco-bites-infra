@@ -43,11 +43,12 @@ resource "local_file" "docker_compose" {
   filename        = "${path.module}/docker-compose.yaml"
   file_permission = "0644"
   content = templatefile("${path.module}/templates/docker-compose.yaml", {
-    db_username  = var.db_username,
-    db_password  = var.db_password,
-    db_name      = var.db_name,
-    ecr_registry = var.ecr_registry
-    image_tag    = var.image_tag
+    db_username        = var.db_username,
+    db_password        = var.db_password,
+    db_name            = var.db_name,
+    ecr_registry_name  = var.ecr_registry_name
+    ecr_registry_alias = var.ecr_registry_alias
+    image_tag          = var.image_tag
   })
 }
 
