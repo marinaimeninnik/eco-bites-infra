@@ -3,9 +3,6 @@ name: infra-create
 on:
   workflow_call:
     inputs:
-      image_tag:
-        required: false
-        type: string
       environment:
         required: false
         type: string  
@@ -64,9 +61,9 @@ jobs:
 
         - name: 'Terraform Plan'
           if: github.event_name == 'workflow_dispatch'
-          run: terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
+          run: terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var-file="variables.env"
         
         - name: 'Terraform Apply'
           if: github.event_name == 'workflow_dispatch'
-          run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -auto-approve
+          run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var-file="variables.env" -auto-approve
     
