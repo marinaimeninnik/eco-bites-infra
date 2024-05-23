@@ -49,6 +49,9 @@ jobs:
           run: |
             value=`cat variables.env`
             echo The result is $value
+
+        - name: Set IMAGE_TAG from variables.env
+          run: echo "IMAGE_TAG=$(cat variables.env | cut -d'=' -f2)" >> $GITHUB_ENV
     
         - name: Terraform Init
           run: terraform init
@@ -61,9 +64,9 @@ jobs:
 
         - name: 'Terraform Plan'
           if: github.event_name == 'workflow_dispatch'
-          run: terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var-file="variables.env"
+          run: terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
         
         - name: 'Terraform Apply'
           if: github.event_name == 'workflow_dispatch'
-          run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var-file="variables.env" -auto-approve
+          run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}" -auto-approve
     
