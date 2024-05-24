@@ -36,13 +36,13 @@ jobs:
             aws-region: ${{ vars.AWS_REGION }}
 
         - name: Download image_tag from artifact
-          if: github.event.workflow_run.workflow == 'gradle.yaml'
+          if: github.event.workflow == 'gradle.yaml'
           uses: actions/download-artifact@v4
           with:
             name: variables
 
         - name: Set IMAGE_TAG from variables.env
-          if: github.event.workflow_run.workflow == 'gradle.yaml'
+          if: github.event.workflow == 'gradle.yaml'
           run: echo "IMAGE_TAG=$(cat variables.env | cut -d'=' -f2)" >> $GITHUB_ENV
     
         - name: Terraform Init
@@ -60,11 +60,10 @@ jobs:
 
         - name: 'Terraform Plan'
           run: |
-            if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-              terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
-            elif [[ "${{ github.event.workflow_run.workflow }}" == "gradle.yaml" ]]; then
+            if [[ "${{ github.event.workflow }}" == "gradle.yaml" ]]; then
               terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
-              echo "This workflow was triggered by gradle.yaml"
+            elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+              terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
             fi
         
         - name: 'Terraform Apply'
@@ -72,7 +71,7 @@ jobs:
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -auto-approve    
 
         - name: 'Terraform Apply with Artifact'
-          if: github.event.workflow_run.workflow == 'gradle.yaml'
+          if: github.event.workflow == 'gradle.yaml'
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}" -auto-approve
 
         - name: Upload docker-compose.yaml as artifact
