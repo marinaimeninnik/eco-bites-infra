@@ -5,7 +5,7 @@ on:
          
 
 jobs:
-  install-infra:
+  uninstall-infra:
     permissions:
       id-token: write
       contents: read
