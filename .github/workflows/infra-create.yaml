@@ -40,7 +40,7 @@ jobs:
 
         - name: Print trigger_pipeline
           run: |
-           echo "trigger_pipeline: ${{ github.event.inputs.trigger_pipeline }}"
+           echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
            echo "env: ${{ github.event.inputs.environment }}"
 
         - name: Download image_tag from artifact
