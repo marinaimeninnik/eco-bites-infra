@@ -33,8 +33,7 @@ jobs:
     if: github.event.inputs.action == 'create' || github.event_name == 'push' || github.event_name == 'pull_request'
     uses: ./.github/workflows/infra-create.yaml
     with:
-      # trigger_event: ${{ github.event_name }}
-      trigger_pipeline: ${{ github.event_name == 'pull_request' && 'pull_request'}}
+      trigger_event: ${{ github.event_name }}
 
   uninstall-infra:
     if: github.event.inputs.action == 'destroy'

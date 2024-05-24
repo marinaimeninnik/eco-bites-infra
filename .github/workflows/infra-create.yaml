@@ -8,7 +8,10 @@ on:
         type: string
       trigger_pipeline:
         required: false
-        type: string 
+        type: string
+      trigger_event:
+        required: false
+        type: string        
 
 jobs:
   install-infra:
@@ -42,24 +45,25 @@ jobs:
           run: |
            echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
            echo "env: ${{ github.event.inputs.environment }}"
+           echo "trigger_event: ${{ inputs.trigger_event }}"
 
         - name: Download image_tag from artifact
-          if: inputs.trigger_pipeline == 'gradle.yaml'
+          if: inputs.trigger_pipeline == 'Java CI with Gradle'
           uses: actions/download-artifact@v4
           with:
             name: variables
 
         - name: Set IMAGE_TAG from variables.env
-          if: inputs.trigger_pipeline == 'gradle.yaml'
+          if: inputs.trigger_pipeline == 'Java CI with Gradle'
           run: echo "IMAGE_TAG=$(cat variables.env | cut -d'=' -f2)" >> $GITHUB_ENV
     
         - name: Terraform Init
           run: terraform init
             
-        - name: 'Terraform Validate'
+        - name: Terraform Validate
           run: terraform validate
 
-        - name: 'Terraform Format'
+        - name: Terraform Format
           run: terraform fmt -check
 
         # - name: 'Terraform Plan'
@@ -68,18 +72,18 @@ jobs:
 
         - name: 'Terraform Plan'
           run: |
-            if [[ "${{ inputs.trigger_pipeline }}" == "gradle.yaml" ]]; then
+            if [[ "${{ inputs.trigger_pipeline }}" == "Java CI with Gradle" ]]; then
               terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
             elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
               terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
             fi
         
         - name: 'Terraform Apply with Artifact'
-          if: inputs.trigger_pipeline == 'gradle.yaml'
+          if: inputs.trigger_pipeline == 'Java CI with Gradle'
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}" -auto-approve
 
         - name: 'Terraform Apply'
-          if: github.event_name == 'workflow_dispatch' || inputs.trigger_pipeline != 'pull_request'
+          if: github.event_name == 'workflow_dispatch' || inputs.trigger_event == 'create'
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -auto-approve 
 
         - name: Upload docker-compose.yaml as artifact
