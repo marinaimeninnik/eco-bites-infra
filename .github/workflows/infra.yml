@@ -34,7 +34,7 @@ jobs:
     uses: ./.github/workflows/infra-create.yaml
     with:
       # trigger_event: ${{ github.event_name }}
-      trigger_pipeline: ${{ github.event_name == 'pull_request' && 'pull_request' || 'gradle.yaml' }}
+      trigger_pipeline: ${{ github.event_name == 'pull_request' && 'pull_request'}}
 
   uninstall-infra:
     if: github.event.inputs.action == 'destroy'
