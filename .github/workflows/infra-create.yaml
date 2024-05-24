@@ -79,7 +79,7 @@ jobs:
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}" -auto-approve
 
         - name: 'Terraform Apply'
-          if: github.event_name == 'workflow_dispatch' || !( inputs.trigger_pipeline == 'gradle.yaml' )
+          if: github.event_name == 'workflow_dispatch' || inputs.trigger_pipeline != 'pull_request'
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -auto-approve 
 
         - name: Upload docker-compose.yaml as artifact
