@@ -18,10 +18,10 @@ services:
   ecobites-backend:
     image: "public.ecr.aws/${ecr_registry_alias}/${ecr_registry_name}:db-${image_tag}"
     container_name: ecobites-backend-container
-    # environment:
-    #   SPRING_DATASOURCE_URL: jdbc:postgresql://ecobites-db:5432/${db_name}
-    #   SPRING_DATASOURCE_USERNAME: ${db_username}
-    #   SPRING_DATASOURCE_PASSWORD: ${db_password}
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ecobites-db:5432/${db_name}
+      DB_USERNAME: ${db_username}
+      DB_PASSWORD: ${db_password}
     ports:
       - "8081:8081"
     networks:
