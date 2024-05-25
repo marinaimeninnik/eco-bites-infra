@@ -83,7 +83,8 @@ jobs:
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}" -auto-approve
 
         - name: 'Terraform Apply'
-          if: github.event_name == 'workflow_dispatch' || inputs.trigger_event == 'create'
+          # if: github.event_name == 'workflow_dispatch' || inputs.trigger_event == 'create'
+          if: inputs.trigger_event == 'create'
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -auto-approve 
 
         - name: Upload docker-compose.yaml as artifact
@@ -101,4 +102,4 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: tf-outputs
-            path: tf-outputs.env    
+            path: tf-outputs.env
