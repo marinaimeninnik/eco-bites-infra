@@ -92,6 +92,10 @@ jobs:
             name: docker-compose
             path: modules/ec2/docker-compose.yaml
 
+        - name: Get terraform outputs
+          id: tf-outputs
+          run: echo "::set-output name=id::$(terraform output -raw instance_this_id)"
+
         - name: Upload terraform outputs as artifact
           uses: actions/upload-artifact@v4
           with:
