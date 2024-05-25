@@ -95,7 +95,7 @@ jobs:
         - name: Get terraform outputs
           id: tf-outputs
           run: |
-            echo "(terraform output -raw instance_this_id)" | tee -a $GITHUB_ENV > tf-outputs.env
+            echo "INSTANCE_ID=$(terraform output -raw instance_this_id)" | tee -a $GITHUB_ENV > tf-outputs.env
 
         - name: Upload terraform outputs as artifact
           uses: actions/upload-artifact@v4
