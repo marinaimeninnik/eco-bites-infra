@@ -41,11 +41,11 @@ jobs:
             role-session-name: github-actions-labsadm
             aws-region: ${{ vars.AWS_REGION }}
 
-        - name: Print trigger_pipeline
-          run: |
-           echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
-           echo "env: ${{ github.event.inputs.environment }}"
-           echo "trigger_event: ${{ inputs.trigger_event }}"
+        # - name: Print trigger_pipeline
+        #   run: |
+        #    echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
+        #    echo "env: ${{ github.event.inputs.environment }}"
+        #    echo "trigger_event: ${{ inputs.trigger_event }}"
 
         - name: Download image_tag from artifact
           if: inputs.trigger_pipeline == 'Java CI with Gradle'
@@ -91,4 +91,9 @@ jobs:
           with:
             name: docker-compose
             path: modules/ec2/docker-compose.yaml
-    
+
+        - name: Upload terraform outputs as artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: tf-outputs
+            path: tf-outputs.env    
