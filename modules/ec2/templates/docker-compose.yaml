@@ -32,3 +32,5 @@ services:
 networks:
   ecobites-network:
     driver: bridge
+
+# some check string
