@@ -94,6 +94,7 @@ jobs:
             path: modules/ec2/docker-compose.yaml
 
         - name: Get terraform outputs
+          if: inputs.trigger_pipeline == 'Java CI with Gradle'
           id: tf-outputs
           run: |
             echo "INSTANCE_ID=$(terraform output -raw instance_this_id)" | tee -a $GITHUB_ENV > tf-outputs.env

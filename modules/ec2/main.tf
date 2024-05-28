@@ -61,6 +61,7 @@ resource "aws_instance" "this" {
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = var.vpc_security_group_ids
   user_data                   = local.user_data
+  iam_instance_profile        = aws_iam_instance_profile.ssm.name
 
   provisioner "file" {
     source      = "${path.module}/docker-compose.yaml"
@@ -78,4 +79,31 @@ resource "aws_instance" "this" {
     { Name = var.instance_name },
     var.tags
   )
+}
+
+resource "aws_iam_role" "ssm" {
+  name = "ssm"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.ssm.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ssm" {
+  name = "ssm"
+  role = aws_iam_role.ssm.name
 }
