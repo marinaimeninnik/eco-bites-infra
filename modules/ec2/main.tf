@@ -9,7 +9,6 @@ locals {
             sudo service docker restart
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
-            sudo apt-get -y install awscli
 
             EOF
 
@@ -99,9 +98,36 @@ resource "aws_iam_role" "ssm" {
   })
 }
 
+resource "aws_iam_policy" "s3_access" {
+  name        = "s3_access"
+  description = "Policy to allow EC2 instance to access S3 bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket"
+        ]
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:s3:::dev-artifact-ecobytes",
+          "arn:aws:s3:::dev-artifact-ecobytes/*"
+        ]
+      },
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.ssm.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "s3_access" {
+  role       = aws_iam_role.ssm.name
+  policy_arn = aws_iam_policy.s3_access.arn
 }
 
 resource "aws_iam_instance_profile" "ssm" {
