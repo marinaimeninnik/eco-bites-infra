@@ -25,30 +25,30 @@ locals {
             EOF
 }
 
-resource "tls_private_key" "key_pair" {
-  count     = var.ec2_key_name == "" ? 1 : 0
-  algorithm = "RSA"
-}
+# resource "tls_private_key" "key_pair" {
+#   count     = var.ec2_key_name == "" ? 1 : 0
+#   algorithm = "RSA"
+# }
 
-resource "aws_key_pair" "key_pair" {
-  count = var.ec2_key_name == "" ? 1 : 0
+# resource "aws_key_pair" "key_pair" {
+#   count = var.ec2_key_name == "" ? 1 : 0
 
-  key_name   = "${var.name}-key"
-  public_key = join("", tls_private_key.key_pair.*.public_key_openssh)
+#   key_name   = "${var.name}-key"
+#   public_key = join("", tls_private_key.key_pair.*.public_key_openssh)
 
-  tags = merge(
-    { Name = "${var.name}.ssh-key" },
-    var.tags
-  )
-}
+#   tags = merge(
+#     { Name = "${var.name}.ssh-key" },
+#     var.tags
+#   )
+# }
 
-resource "local_file" "ssh_private_key" {
-  count = var.ec2_key_name == "" ? 1 : 0
+# resource "local_file" "ssh_private_key" {
+#   count = var.ec2_key_name == "" ? 1 : 0
 
-  filename        = "${abspath(path.root)}/${var.name}-ssh-key.pem"
-  file_permission = "0600"
-  content         = join("", tls_private_key.key_pair.*.private_key_pem)
-}
+#   filename        = "${abspath(path.root)}/${var.name}-ssh-key.pem"
+#   file_permission = "0600"
+#   content         = join("", tls_private_key.key_pair.*.private_key_pem)
+# }
 
 resource "local_file" "docker_compose" {
   filename        = "${path.module}/docker-compose.yaml"
@@ -65,26 +65,26 @@ resource "local_file" "docker_compose" {
 
 
 resource "aws_instance" "this" {
-  ami                         = var.ami
-  instance_type               = var.instance_type
-  key_name                    = var.ec2_key_name == "" ? join("", aws_key_pair.key_pair[*].key_name) : var.ec2_key_name
+  ami           = var.ami
+  instance_type = var.instance_type
+  # key_name                    = var.ec2_key_name == "" ? join("", aws_key_pair.key_pair[*].key_name) : var.ec2_key_name
   user_data_replace_on_change = true
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = var.vpc_security_group_ids
   user_data                   = local.user_data
   iam_instance_profile        = aws_iam_instance_profile.ssm.name
 
-  provisioner "file" {
-    source      = "${path.module}/docker-compose.yaml"
-    destination = "/home/ubuntu/docker-compose.yaml"
+  # provisioner "file" {
+  #   source      = "${path.module}/docker-compose.yaml"
+  #   destination = "/home/ubuntu/docker-compose.yaml"
 
-    connection {
-      type        = "ssh"
-      user        = "ubuntu" # user for connection
-      private_key = join("", tls_private_key.key_pair.*.private_key_pem)
-      host        = self.public_ip
-    }
-  }
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ubuntu" # user for connection
+  #     private_key = join("", tls_private_key.key_pair.*.private_key_pem)
+  #     host        = self.public_ip
+  #   }
+  # }
 
   tags = merge(
     { Name = var.instance_name },
