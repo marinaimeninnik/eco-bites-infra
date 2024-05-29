@@ -25,7 +25,8 @@ bucket_artifact_name = "artifact-ecobytes"
 security_group_name = "Webserver"
 
 #----- EC2 instance properties  --------------------------------
-ami                = "ami-053b0d53c279acc90"
+# ami                = "ami-053b0d53c279acc90"
+ami                = "ami-00beae93a2d981137"
 instance_type      = "t2.micro"
 instance_name      = "webserver"
 ecr_registry_name  = "eco-bites"

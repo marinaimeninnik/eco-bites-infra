@@ -1,17 +1,28 @@
+# locals {
+#   user_data = <<-EOF
+#             #!/bin/bash
+#             sudo apt-get -y update
+#             sudo apt-get -y install wget
+#             sudo wget https://get.docker.com -O docker_install.sh  
+#             sudo sh docker_install.sh
+#             sudo usermod -aG docker $USER
+#             sudo service docker restart
+#             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#             sudo chmod +x /usr/local/bin/docker-compose
+#             EOF
+
+# }
+
 locals {
   user_data = <<-EOF
             #!/bin/bash
-            sudo apt-get -y update
-            sudo apt-get -y install wget
-            sudo wget https://get.docker.com -O docker_install.sh  
-            sudo sh docker_install.sh
-            sudo usermod -aG docker $USER
-            sudo service docker restart
+            sudo yum -y update
+            sudo amazon-linux-extras install docker
+            sudo service docker start
+            sudo usermod -a -G docker ec2-user
             sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
-
             EOF
-
 }
 
 resource "tls_private_key" "key_pair" {
