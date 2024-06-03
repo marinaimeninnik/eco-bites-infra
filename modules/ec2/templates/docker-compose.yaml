@@ -13,7 +13,7 @@ services:
     networks:
       - ecobites-network
     volumes:
-      - ./db/migration/V1_0_0__create_base_schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./V1_0_0__create_base_schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
 
   ecobites-backend:
