@@ -16,6 +16,18 @@ on:
         options:
           - create
           - destroy
+          - build_backend
+          - deploy_backend
+          - build_frontend
+          - deploy_frontend
+      # deploy-backend:
+      #   description: "Deploy backend"
+      #   required: false
+      #   type: boolean
+      # deploy-frontend:
+      #   description: "Deploy frontend"
+      #   required: false
+      #   type: boolean
       environment:
         description: "Chose infrastructure environment to be created"
         required: true
@@ -38,3 +50,39 @@ jobs:
   uninstall-infra:
     if: github.event.inputs.action == 'destroy'
     uses: ./.github/workflows/infra-destroy.yaml
+
+  build-backend:
+    if: github.event.inputs.action == 'build_backend'
+    uses: marinaimeninnik/eco-bites-front/.github/workflows/react.yaml@CI-CD_pipeline
+    # with:
+    #   environment: ${{ github.event.inputs.environment }}
+
+  
+
+
+  #   deliver:
+  #     needs: build
+  #     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
+  #     permissions:
+  #       id-token: write
+  #       contents: read
+  #     with:
+  #       environment: ${{ github.event.inputs.environment }}
+  #       trigger_pipeline: ${{ github.workflow }}
+  
+  #   deploy-backend:
+  #     needs: deliver
+  #     uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
+  #     permissions:
+  #       id-token: write
+  #       contents: read
+
+
+
+
+  # deploy-frontend:
+  #   if: github.event.inputs.deploy-frontend == true
+  #   uses: marinaimeninnik/eco-bites-front/.github/workflows/react.yaml@CI-CD_pipeline
+  #   # with:
+  #   #   environment: ${{ github.event.inputs.environment }}
+  #   #   trigger_pipeline: ${{ github.workflow }}
