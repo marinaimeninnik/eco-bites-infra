@@ -52,25 +52,21 @@ jobs:
     uses: ./.github/workflows/infra-destroy.yaml
 
   build-backend:
-    if: github.event.inputs.action == 'build_backend'
+    if: github.event.inputs.action == 'build_backend' || github.event.inputs.action == 'deploy_backend'
     uses: marinaimeninnik/eco-bites-back/.github/workflows/gradle.yml@docker-compose
-    # permissions:
-    #   id-token: write
-    #   contents: write
     with:
       environment: ${{ github.event.inputs.environment }}
   
-
-
-  #   deliver:
-  #     needs: build
-  #     uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
-  #     permissions:
-  #       id-token: write
-  #       contents: read
-  #     with:
-  #       environment: ${{ github.event.inputs.environment }}
-  #       trigger_pipeline: ${{ github.workflow }}
+  deliver-backend:
+    if: github.event.inputs.action == 'deploy_backend'
+    needs: build-backend
+    uses: ./.github/workflows/infra-create.yaml@frontend_deployment
+    # permissions:
+    #   id-token: write
+    #   contents: read
+    with:
+      environment: ${{ github.event.inputs.environment }}
+      trigger_pipeline: ${{ github.workflow }}
   
   #   deploy-backend:
   #     needs: deliver
