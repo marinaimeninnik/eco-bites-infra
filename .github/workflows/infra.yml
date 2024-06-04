@@ -54,8 +54,8 @@ jobs:
   build-backend:
     if: github.event.inputs.action == 'build_backend'
     uses: marinaimeninnik/eco-bites-front/.github/workflows/react.yaml@CI-CD_pipeline
-    # with:
-    #   environment: ${{ github.event.inputs.environment }}
+    with:
+      environment: ${{ github.event.inputs.environment }}
 
   
 
