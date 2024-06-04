@@ -41,9 +41,9 @@ jobs:
             role-session-name: github-actions-labsadm
             aws-region: ${{ vars.AWS_REGION }}
 
-        # - name: Print trigger_pipeline
-        #   run: |
-        #    echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
+        - name: Print trigger_pipeline
+          run: |
+           echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
         #    echo "env: ${{ github.event.inputs.environment }}"
         #    echo "trigger_event: ${{ inputs.trigger_event }}"
 
