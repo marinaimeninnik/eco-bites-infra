@@ -60,7 +60,7 @@ jobs:
   deliver-backend:
     if: github.event.inputs.action == 'deploy_backend'
     needs: build-backend
-    uses: ./.github/workflows/infra-create.yaml@frontend_deployment
+    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
     # permissions:
     #   id-token: write
     #   contents: read
