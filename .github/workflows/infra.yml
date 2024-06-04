@@ -54,9 +54,11 @@ jobs:
   build-backend:
     if: github.event.inputs.action == 'build_backend'
     uses: marinaimeninnik/eco-bites-back/.github/workflows/gradle.yml@docker-compose
+    permissions:
+      id-token: write
+      contents: read
     with:
       environment: ${{ github.event.inputs.environment }}
-
   
 
 
