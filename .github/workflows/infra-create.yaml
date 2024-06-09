@@ -69,17 +69,25 @@ jobs:
 # TODO: change condition because 'Infra Ecobites' branch will trigger current pipeline all the time in any case
 
         - name: 'Terraform Plan'
+          if: github.event.inputs.trigger_event == 'create'
           run: |
-            if [[ "${{ github.event_name }}" == "push" || "${{ github.event.inputs.trigger_event }}" == "pull" || "${{ github.event.inputs.trigger_event }}" == "create" ]]; then
-              terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
-            else
-              terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
-            fi
+            terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
+  # if [[ "${{ github.event.inputs.trigger_event }}" == "create" ]]; then
+  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
+  # elif [[ "${{ github.event.inputs.trigger_event }}"]]
+  #   else
+  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
+  # fi
   # if [[ "${{ inputs.trigger_pipeline }}" == "Infra Ecobytes" ]]; then
   #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
   # elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
   #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
   # fi
+
+        - name: 'Terraform Plan with Artifact'
+          if: github.event.inputs.trigger_event == 'create'
+          run: |
+            terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
         
         - name: 'Terraform Apply with Artifact'
           if: inputs.trigger_pipeline == 'Java CI with Gradle'
