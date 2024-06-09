@@ -69,7 +69,7 @@ jobs:
 # TODO: change condition because 'Infra Ecobites' branch will trigger current pipeline all the time in any case
 
         - name: 'Terraform Plan'
-          if: github.event.inputs.trigger_event == 'create'
+          if: inputs.trigger_event == 'create'
           run: |
             terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
   # if [[ "${{ github.event.inputs.trigger_event }}" == "create" ]]; then
@@ -85,7 +85,7 @@ jobs:
   # fi
 
         - name: 'Terraform Plan with Artifact'
-          if: github.event.inputs.trigger_event == 'create'
+          if: inputs.trigger_event == 'deploy_backend' || inputs.trigger_event == 'deploy_frontend'
           run: |
             terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
         
