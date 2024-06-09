@@ -11,7 +11,7 @@ on:
         type: string
       trigger_event:
         required: false
-        type: string        
+        type: string
 
 jobs:
   install-infra:
@@ -66,13 +66,20 @@ jobs:
         - name: Terraform Format
           run: terraform fmt -check
 
+# TODO: change condition because 'Infra Ecobites' branch will trigger current pipeline all the time in any case
+
         - name: 'Terraform Plan'
           run: |
-            if [[ "${{ inputs.trigger_pipeline }}" == "Java CI with Gradle" ]]; then
-              terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
-            elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ github.event_name }}" == "push" || "${{ github.event.inputs.trigger_event }}" == "pull" || "${{ github.event.inputs.trigger_event }}" == "create" ]]; then
               terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
+            else
+              terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
             fi
+  # if [[ "${{ inputs.trigger_pipeline }}" == "Infra Ecobytes" ]]; then
+  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
+  # elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
+  # fi
         
         - name: 'Terraform Apply with Artifact'
           if: inputs.trigger_pipeline == 'Java CI with Gradle'
