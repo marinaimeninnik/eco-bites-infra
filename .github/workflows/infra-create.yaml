@@ -44,8 +44,8 @@ jobs:
         - name: Print trigger_pipeline
           run: |
            echo "trigger_pipeline: ${{ inputs.trigger_pipeline }}"
+           echo "trigger_event: ${{ inputs.trigger_event }}"
         #    echo "env: ${{ github.event.inputs.environment }}"
-        #    echo "trigger_event: ${{ inputs.trigger_event }}"
 
         - name: Download image_tag from artifact
           if: inputs.trigger_pipeline == 'Java CI with Gradle'
