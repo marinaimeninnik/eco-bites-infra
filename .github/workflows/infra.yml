@@ -46,7 +46,7 @@ jobs:
     uses: ./.github/workflows/infra-create.yaml
     with:
       environment: ${{ github.event.inputs.environment }}
-      trigger_event: ${{ github.event_name }}
+      trigger_event: ${{ github.event.inputs.action }}
 
   uninstall-infra:
     if: github.event.inputs.action == 'destroy'
