@@ -69,7 +69,7 @@ jobs:
     with:
       environment: ${{ github.event.inputs.environment }}
       # trigger_pipeline: ${{ github.workflow }}
-      trigger_event: ${{ github.event_name }}
+      trigger_event: ${{ github.event.inputs.action }}
   
   #   deploy-backend:
   #     needs: deliver
