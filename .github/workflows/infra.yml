@@ -61,33 +61,23 @@ jobs:
   
   deliver-backend:
     if: github.event.inputs.action == 'deploy_backend'
-    runs-on: ubuntu-latest
+    needs: build-backend
+    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
+    # permissions:
+    #   id-token: write
+    #   contents: read
+    with:
+      environment: ${{ github.event.inputs.environment }}
+      # trigger_pipeline: ${{ github.workflow }}
+      trigger_event: ${{ github.event.inputs.action }}
+  
+  deploy-backend:
+    if: github.event.inputs.action == 'deploy_backend'
+    needs: deliver-backend
+    uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
     permissions:
       id-token: write
       contents: read
-    steps:
-    - name: Install Infra
-      # needs: build-backend
-      uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@frontend_deployment
-      # permissions:
-      #   id-token: write
-      #   contents: read
-      with:
-        environment: ${{ github.event.inputs.environment }}
-        # trigger_pipeline: ${{ github.workflow }}
-        trigger_event: ${{ github.event.inputs.action }}
-
-    - name: Deploy Backend
-      uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
-      
-  
-  # deploy-backend:
-  #   if: github.event.inputs.action == 'deploy_backend'
-  #   needs: deliver-backend
-  #   uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@docker-compose
-  #   permissions:
-  #     id-token: write
-  #     contents: read
 
 
 
