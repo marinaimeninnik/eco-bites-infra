@@ -68,24 +68,13 @@ jobs:
         - name: Terraform Format
           run: terraform fmt -check
 
-# TODO: change condition because 'Infra Ecobites' branch will trigger current pipeline all the time in any case
-
         - name: 'Terraform Plan'
           # if: github.event.inputs.trigger_event == 'create'
           if: ${{ inputs.trigger_event == 'create' }}
           run: |
             terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
-  # if [[ "${{ github.event.inputs.trigger_event }}" == "create" ]]; then
-  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
-  # elif [[ "${{ github.event.inputs.trigger_event }}"]]
-  #   else
-  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
-  # fi
-  # if [[ "${{ inputs.trigger_pipeline }}" == "Infra Ecobytes" ]]; then
-  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
-  # elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-  #   terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars"
-  # fi
+
+# TODO: test deploy backend
 
         - name: 'Terraform Plan with Artifact'
           if: ${{ inputs.trigger_event == 'deploy_backend' || inputs.trigger_event == 'deploy_frontend' }}
@@ -94,7 +83,8 @@ jobs:
             terraform plan -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}"
         
         - name: 'Terraform Apply with Artifact'
-          if: inputs.trigger_pipeline == 'Java CI with Gradle'
+          if: ${{ inputs.trigger_event == 'deploy_backend' || inputs.trigger_event == 'deploy_frontend' }} 
+          # if: inputs.trigger_pipeline == 'Java CI with Gradle'
           run: terraform apply -var-file="config/${{ github.event.inputs.environment}}.tfvars" -var="image_tag=${{ env.IMAGE_TAG }}" -auto-approve
 
         - name: 'Terraform Apply'
@@ -108,7 +98,8 @@ jobs:
             path: modules/ec2/docker-compose.yaml
 
         - name: Get terraform outputs
-          if: inputs.trigger_pipeline == 'Java CI with Gradle'
+          if: ${{ inputs.trigger_event == 'deploy_backend' || inputs.trigger_event == 'deploy_frontend' }}
+          # if: inputs.trigger_pipeline == 'Java CI with Gradle'
           id: tf-outputs
           run: |
             echo "INSTANCE_ID=$(terraform output -raw instance_this_id)" | tee -a $GITHUB_ENV > tf-outputs.env
