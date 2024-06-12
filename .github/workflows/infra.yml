@@ -59,6 +59,8 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
       # trigger_event: ${{ github.event_name }}
   
+# TODO: try to make this step fitting for back and front deliver
+
   deliver-backend:
     if: github.event.inputs.action == 'deploy_backend'
     needs: build-backend
@@ -79,12 +81,11 @@ jobs:
       id-token: write
       contents: read
 
+# TODO: finish step beyond
 
-
-
-  # deploy-frontend:
-  #   if: github.event.inputs.deploy-frontend == true
-  #   uses: marinaimeninnik/eco-bites-front/.github/workflows/react.yaml@CI-CD_pipeline
-  #   # with:
-  #   #   environment: ${{ github.event.inputs.environment }}
-  #   #   trigger_pipeline: ${{ github.workflow }}
+  build-frontend:
+    if: github.event.inputs.action == 'build_frontend' || github.event.inputs.action == 'deploy_frontend'
+    uses: marinaimeninnik/eco-bites-front/.github/workflows/react.yaml@CI-CD_pipeline
+    permissions:
+      id-token: write
+      contents: read
