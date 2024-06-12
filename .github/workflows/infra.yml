@@ -85,7 +85,7 @@ jobs:
 
   build-frontend:
     if: github.event.inputs.action == 'build_frontend' || github.event.inputs.action == 'deploy_frontend'
-    uses: marinaimeninnik/eco-bites-front/.github/workflows/react.yaml@CI-CD_pipeline
+    uses: marinaimeninnik/eco-bites-front/.github/workflows/build-react.yaml@CI-CD_pipeline
     permissions:
       id-token: write
       contents: read
