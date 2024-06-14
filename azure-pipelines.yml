@@ -4,7 +4,7 @@ parameters:
   default: 'ubuntu-20.04'
 - name: terraformFolder
   type: string
-  default: "terraform"
+  default: "."
 - name: terraformVersion
   type: string
   default: "0.15.0"
