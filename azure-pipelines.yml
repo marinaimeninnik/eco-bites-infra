@@ -1,0 +1,29 @@
+parameters:
+- name: buildPool
+  type: string
+  default: 'ubuntu-20.04'
+- name: terraformFolder
+  type: string
+  default: "terraform"
+- name: terraformVersion
+  type: string
+  default: "0.15.0"
+
+jobs:
+- job: Validate
+  pool:
+    vmImage: ${{ parameters.buildPool }}
+
+  steps:
+    - task: TerraformInstaller@0
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: ${{ parameters.terraformVersion }}
+
+    - script: |
+        terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
+      displayName: Terraform init
+
+    - script: |
+        terraform -chdir=${{ parameters.terraformFolder }} validate
+      displayName: Terraform validate
