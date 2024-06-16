@@ -17,3 +17,8 @@ output "cloudfront_distribution_id" {
   description = "The ID of the CloudFront distribution"
   value       = module.cloudfront.cloudfront_distribution_id
 }
+
+output "api_gateway_invoke_url" {
+  description = "Invoke URL for API Gateway"
+  value       = module.api_gateway.api_gateway_invoke_url
+}
