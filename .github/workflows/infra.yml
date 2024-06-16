@@ -42,7 +42,7 @@ permissions:
 
 jobs:
   install-infra:
-    if: github.event.inputs.action == 'create' || github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event.inputs.action == 'create' || github.event_name == 'push' || github.event_name == 'pull_request' || github.event.inputs.action == 'deploy_frontend'
     uses: ./.github/workflows/infra-create.yaml
     with:
       environment: ${{ github.event.inputs.environment }}
@@ -85,6 +85,7 @@ jobs:
 
   build-frontend:
     if: github.event.inputs.action == 'build_frontend' || github.event.inputs.action == 'deploy_frontend'
+    needs: install-infra
     uses: marinaimeninnik/eco-bites-front/.github/workflows/build-react.yaml@CI-CD_pipeline
     permissions:
       id-token: write
