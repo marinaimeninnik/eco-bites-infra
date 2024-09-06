@@ -15,14 +15,14 @@ jobs:
     vmImage: ${{ parameters.buildPool }}
 
   steps:
-    # - task: TerraformInstaller@0
-    #   displayName: Install Terraform
-    #   inputs:
-    #     terraformVersion: ${{ parameters.terraformVersion }}
+    - task: TerraformInstaller@0
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: ${{ parameters.terraformVersion }}
 
-    # - script: |
-    #     terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
-    #   displayName: Terraform init
+    - script: |
+        terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
+      displayName: Terraform init
 
     # - script: |
     #     terraform -chdir=${{ parameters.terraformFolder }} validate
