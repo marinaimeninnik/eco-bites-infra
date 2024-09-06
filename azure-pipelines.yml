@@ -5,9 +5,9 @@ parameters:
 - name: terraformFolders
   type: object
   default:
-   - cde-backend
-   - cde-frontend
-   - cde-shared
+   - 'cde-backend'
+   - 'cde-frontend'
+   - 'cde-shared'
 - name: terraformVersion
   type: string
   default: "0.15.0"
