@@ -6,7 +6,7 @@ parameters:
   type: object
   default:
    - 'docs'
-   - 'environment'
+   - 'enviroment'
    - 'modules'
   # default:
   #  - 'cde-backend'
