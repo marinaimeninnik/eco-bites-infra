@@ -2,9 +2,12 @@ parameters:
 - name: buildPool
   type: string
   default: 'ubuntu-20.04'
-- name: terraformFolder
-  type: string
-  default: "."
+- name: terraformFolders
+  type: object
+  default:
+   - cde-backend
+   - cde-frontend
+   - cde-shared
 - name: terraformVersion
   type: string
   default: "0.15.0"
@@ -20,15 +23,17 @@ jobs:
       inputs:
         terraformVersion: ${{ parameters.terraformVersion }}
 
-    - script: |
-        terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
-      displayName: Terraform init
+    - ${{ each terraformFolder in parameters.terraformFolders }}:
 
-    # - script: |
-    #     terraform -chdir=${{ parameters.terraformFolder }} validate
-    #   displayName: Terraform validate
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
-      displayName: 'TF Validate'
-      inputs:
-        command: validate
-        workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.terraformFolder }}'
+      - script: |
+          terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
+        displayName: Terraform init
+
+      - script: |
+          terraform -chdir=${{ parameters.terraformFolder }} validate
+        displayName: Terraform validate
+    # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+    #   displayName: 'TF Validate'
+    #   inputs:
+    #     command: validate
+    #     workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.terraformFolder }}'
