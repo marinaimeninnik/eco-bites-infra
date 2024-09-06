@@ -15,15 +15,20 @@ jobs:
     vmImage: ${{ parameters.buildPool }}
 
   steps:
-    - task: TerraformInstaller@0
-      displayName: Install Terraform
+    # - task: TerraformInstaller@0
+    #   displayName: Install Terraform
+    #   inputs:
+    #     terraformVersion: ${{ parameters.terraformVersion }}
+
+    # - script: |
+    #     terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
+    #   displayName: Terraform init
+
+    # - script: |
+    #     terraform -chdir=${{ parameters.terraformFolder }} validate
+    #   displayName: Terraform validate
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+      displayName: 'TF Validate'
       inputs:
-        terraformVersion: ${{ parameters.terraformVersion }}
-
-    - script: |
-        terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
-      displayName: Terraform init
-
-    - script: |
-        terraform -chdir=${{ parameters.terraformFolder }} validate
-      displayName: Terraform validate
+        command: validate
+        workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.terraformFolder }}'
