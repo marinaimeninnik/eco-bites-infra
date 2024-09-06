@@ -26,11 +26,11 @@ jobs:
     - ${{ each terraformFolder in parameters.terraformFolders }}:
 
       - script: |
-          terraform -chdir=${{ parameters.terraformFolder }} init -backend=false
+          terraform -chdir=${{ terraformFolder }} init -backend=false
         displayName: Terraform init
 
       - script: |
-          terraform -chdir=${{ parameters.terraformFolder }} validate
+          terraform -chdir=${{ terraformFolder }} validate
         displayName: Terraform validate
     # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
     #   displayName: 'TF Validate'
