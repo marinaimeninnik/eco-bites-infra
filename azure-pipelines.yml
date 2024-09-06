@@ -14,7 +14,7 @@ parameters:
   #  - 'cde-shared'
 - name: terraformVersion
   type: string
-  default: "0.15.0"
+  default: "1.4.6"
 
 jobs:
 - job: Validate
@@ -22,8 +22,12 @@ jobs:
     vmImage: ${{ parameters.buildPool }}
 
   steps:
-    - task: TerraformInstaller@0
-      displayName: Install Terraform
+    # - task: TerraformInstaller@0
+    #   displayName: Install Terraform
+    #   inputs:
+    #     terraformVersion: ${{ parameters.terraformVersion }}
+    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+      displayName: 'Install TF ${{ parameters.terraformVersion }}'
       inputs:
         terraformVersion: ${{ parameters.terraformVersion }}
 
