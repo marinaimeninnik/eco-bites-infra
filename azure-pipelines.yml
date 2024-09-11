@@ -24,7 +24,7 @@ jobs:
 
 
   steps:
-    - checkout: git://marinaimeninnik/eco-bites-test@main
+    - checkout: git://PPG/replication-template@main
     # - task: TerraformInstaller@0
     #   displayName: Install Terraform
     #   inputs:
