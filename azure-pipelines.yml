@@ -21,7 +21,10 @@ jobs:
   pool:
     vmImage: ${{ parameters.buildPool }}
 
+
+
   steps:
+    - checkout: git://marinaimeninnik/eco-bites-test@main
     # - task: TerraformInstaller@0
     #   displayName: Install Terraform
     #   inputs:
@@ -33,22 +36,22 @@ jobs:
 
     - ${{ each terraformFolder in parameters.terraformFolders }}:
 
-      # - script: |
-      #     terraform -chdir=${{ terraformFolder }} init -backend=false
-      #   displayName: Terraform init
+      - script: |
+          terraform -chdir=${{ terraformFolder }} init -backend=false
+        displayName: Terraform init
 
-      # - script: |
-      #     terraform -chdir=${{ terraformFolder }} validate
-      #   displayName: Terraform validate
-      - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
-        displayName: 'TF Init'
-        inputs:
-          command: init
-          workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.service_name }}'
-          backend: false
+      - script: |
+          terraform -chdir=${{ terraformFolder }} validate
+        displayName: Terraform validate
+      # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+      #   displayName: 'TF Init'
+      #   inputs:
+      #     command: init
+      #     workingDirectory: '$(System.DefaultWorkingDirectory)/${{ parameters.service_name }}'
+      #     backend: false
 
-      - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
-        displayName: 'TF Validate'
-        inputs:
-          command: validate
-          workingDirectory: '$(System.DefaultWorkingDirectory)/${{ terraformFolder }}'
+      # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV2@2
+      #   displayName: 'TF Validate'
+      #   inputs:
+      #     command: validate
+      #     workingDirectory: '$(System.DefaultWorkingDirectory)/${{ terraformFolder }}'
